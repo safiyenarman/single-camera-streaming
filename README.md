@@ -9,17 +9,19 @@ and UDP for video data simultaneously.
 
 ## System Overview
 
-```
-[Raspberry Pi Client]                          [macOS Server]
- cameracapture                                  framecollector
-     ↓ raw frame                                    ↓ assembled JPEG
- frameconverter  ── JPEG compress ──>           serverwindow
-     ↓ JPEG bytes                                    ↓ decode + display
- cameraclient  ── UDP packets (port 4567) ──>   motion detection
-     ↑                                              ↓
-     └────────── TCP commands (port 3456) ──────────┘
-                 RES: / MODE: / SETTINGS:
-```
+┌─────────────────────────────────┐         ┌─────────────────────────────────┐
+│       RASPBERRY PI (Client)     │         │         macOS (Server)          │
+│                                 │         │                                 │
+│  cameracapture                  │         │  framecollector                 │
+│       ↓ raw frame               │         │       ↓ assembled JPEG          │
+│  frameconverter                 │         │  serverwindow                   │
+│       ↓ JPEG ~8–15 KB           │         │       ↓ decode + display        │
+│  cameraclient                   │         │  motion detection               │
+│       ↓                         │         │       ↓                         │
+│  UDP packets ───────────────────┼────────►│  port 4567 (video)              │
+│  TCP socket  ◄──────────────────┼─────────┤  port 3456 (control)            │
+│                                 │         │  RES: / MODE: / SETTINGS:       │
+└─────────────────────────────────┘         └─────────────────────────────────┘
 
 ---
 
