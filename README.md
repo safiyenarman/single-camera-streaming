@@ -21,6 +21,7 @@ and UDP for video data simultaneously.
 | Analysis | | | motion detection |
 
 TCP messages:** `RES:640x480` · `MODE:COLOR` · `MODE:GRAYSCALE` · `SETTINGS:1280x720:COLOR`
+
 ---
 
 ## Features
