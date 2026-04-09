@@ -9,20 +9,18 @@ and UDP for video data simultaneously.
 
 ## System Overview
 
-┌─────────────────────────────────┐         ┌─────────────────────────────────┐
-│       RASPBERRY PI (Client)     │         │         macOS (Server)          │
-│                                 │         │                                 │
-│  cameracapture                  │         │  framecollector                 │
-│       ↓ raw frame               │         │       ↓ assembled JPEG          │
-│  frameconverter                 │         │  serverwindow                   │
-│       ↓ JPEG ~8–15 KB           │         │       ↓ decode + display        │
-│  cameraclient                   │         │  motion detection               │
-│       ↓                         │         │       ↓                         │
-│  UDP packets ───────────────────┼────────►│  port 4567 (video)              │
-│  TCP socket  ◄──────────────────┼─────────┤  port 3456 (control)            │
-│                                 │         │  RES: / MODE: / SETTINGS:       │
-└─────────────────────────────────┘         └─────────────────────────────────┘
+**Client** (Raspberry Pi / Linux) → **Server** (macOS / any Qt platform)
 
+| Layer | Client | Direction | Server |
+|-------|--------|-----------|--------|
+| Capture | `cameracapture` → `frameconverter` | | |
+| Compression | JPEG ~8–15 KB per frame | | |
+| Video | `cameraclient` | ──UDP port 4567──► | `framecollector` |
+| Control | `cameraclient` | ◄─TCP port 3456─── | `serverwindow` |
+| Display | | | decode + display |
+| Analysis | | | motion detection |
+
+**TCP messages:** `RES:640x480` · `MODE:COLOR` · `MODE:GRAYSCALE` · `SETTINGS:1280x720:COLOR`
 ---
 
 ## Features
